@@ -1,0 +1,4 @@
+[package]
+name = "cgraph"
+version = "0.1.0"
+authors = ["Oliver Schneider <rust-cgraphOochah0O@oli-obk.de>"]
