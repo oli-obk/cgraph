@@ -37,12 +37,15 @@ extern {
 
 pub struct Graph(AgraphPtr);
 
-impl<T: Into<Vec<u8>>> From<T> for Graph {
-    fn from(s: T) -> Self {
-        let s = CString::new(s.into()).unwrap();
-        Graph( unsafe {
-            agmemread(s.as_ptr())
-        } )
+impl Graph {
+    pub fn parse<T: Into<Vec<u8>>>(t: T) -> Result<Graph, RenderError> {
+        let s = CString::new(t.into()).unwrap();
+        let data = unsafe { agmemread(s.as_ptr()) };
+        if data.0.is_null() {
+            Err(RenderError::ParseError)
+        } else {
+            Ok(Graph(data))
+        }
     }
 }
 
@@ -57,6 +60,7 @@ impl Drop for Graph {
 #[derive(Debug)]
 pub enum RenderError {
     ContextNull,
+    ParseError,
     GvLayout(c_int),
     GvRenderFilename(c_int),
     GvFreeLayout(c_int),
