@@ -105,11 +105,12 @@ impl Graph {
                 return Err(GvLayout(res));
             }
             let svg = CString::new("svg").unwrap();
+            let file_text = file.as_os_str().to_str().unwrap();
             let res = gvRenderFilename(
                 gvc,
                 self.0,
                 svg.as_ptr(),
-                file.as_os_str().to_str().unwrap().as_ptr() as *const i8,
+                file_text.as_ptr() as *const i8,
             );
             if res != 0 {
                 return Err(GvRenderFilename(res));
