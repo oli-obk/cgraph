@@ -1,23 +1,14 @@
 use std::os::raw::{c_int, c_char, c_void};
 use std::path::Path;
 use std::ffi::{CString, CStr};
-use std::ptr::null;
 
 #[repr(C)]
+#[derive(Copy, Clone)]
 struct GVCPtr(*const c_void);
 
-impl Copy for GVCPtr {}
-impl Clone for GVCPtr {
-    fn clone(&self) -> Self { GVCPtr(self.0) }
-}
-
 #[repr(C)]
+#[derive(Copy, Clone)]
 struct AgraphPtr(*const c_void);
-
-impl Copy for AgraphPtr {}
-impl Clone for AgraphPtr {
-    fn clone(&self) -> Self { AgraphPtr(self.0) }
-}
 
 #[repr(C)]
 struct AgsymPtr(*const c_void);
@@ -89,15 +80,15 @@ impl Graph {
             let fontname = CString::new("fontname").unwrap();
             let font = CString::new("helvetica").unwrap();
             let res = agattr(self.0, AGNODE, fontname.as_ptr(), font.as_ptr());
-            if res.0 == null() {
+            if res.0.is_null() {
                 return Err(AgAttr);
             }
             let res = agattr(self.0, AGRAPH, fontname.as_ptr(), font.as_ptr());
-            if res.0 == null() {
+            if res.0.is_null() {
                 return Err(AgAttr);
             }
             let res = agattr(self.0, AGEDGE, fontname.as_ptr(), font.as_ptr());
-            if res.0 == null() {
+            if res.0.is_null() {
                 return Err(AgAttr);
             }
             let gvc = gvContext();
