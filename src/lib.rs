@@ -81,20 +81,6 @@ impl Graph {
         assert!(!(self.0).0.is_null());
         let file = file.as_ref();
         unsafe {
-            let fontname = CString::new("fontname").unwrap();
-            let font = CString::new("helvetica").unwrap();
-            let res = agattr(self.0, AGNODE, fontname.as_ptr(), font.as_ptr());
-            if res.0.is_null() {
-                return Err(AgAttr);
-            }
-            let res = agattr(self.0, AGRAPH, fontname.as_ptr(), font.as_ptr());
-            if res.0.is_null() {
-                return Err(AgAttr);
-            }
-            let res = agattr(self.0, AGEDGE, fontname.as_ptr(), font.as_ptr());
-            if res.0.is_null() {
-                return Err(AgAttr);
-            }
             let gvc = gvContext();
             if gvc.0.is_null() {
                 return Err(ContextNull);
@@ -129,20 +115,6 @@ impl Graph {
     pub fn render_dot(&self) -> Result<Vec<u8>, RenderError> {
         assert!(!(self.0).0.is_null());
         unsafe {
-            let fontname = CString::new("fontname").unwrap();
-            let font = CString::new("helvetica").unwrap();
-            let res = agattr(self.0, AGNODE, fontname.as_ptr(), font.as_ptr());
-            if res.0 == null() {
-                return Err(AgAttr);
-            }
-            let res = agattr(self.0, AGRAPH, fontname.as_ptr(), font.as_ptr());
-            if res.0 == null() {
-                return Err(AgAttr);
-            }
-            let res = agattr(self.0, AGEDGE, fontname.as_ptr(), font.as_ptr());
-            if res.0 == null() {
-                return Err(AgAttr);
-            }
             let gvc = gvContext();
             if gvc.0.is_null() {
                 return Err(ContextNull);
