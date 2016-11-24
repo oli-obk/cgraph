@@ -17,12 +17,6 @@ impl Clone for AgsymPtr {
     fn clone(&self) -> Self { AgsymPtr(self.0) }
 }
 
-const AGRAPH: c_int	= 0; /* can't exceed 2 bits. see Agtag_t. */
-const AGNODE: c_int = 1;
-const AGOUTEDGE: c_int = 2;
-//const AGINEDGE: c_int = 3; /* (1 << 1) indicates an edge tag.   */
-const AGEDGE: c_int = AGOUTEDGE; /* synonym in object kind args */
-
 #[link(name = "cgraph")]
 extern {
     // Agraph_t *agmemread(char*);
@@ -31,8 +25,6 @@ extern {
     fn agclose(g: AgraphPtr) -> c_int;
     // char *agnameof(void*);
     fn agnameof(obj: *const c_void) -> *const c_char;
-    // Agsym_t *agattr(Agraph_t *g, int kind, char *name, char *value);
-    fn agattr(g: AgraphPtr, kind: c_int, name: *const c_char, value: *const c_char) -> AgsymPtr;
 }
 
 pub struct Graph(AgraphPtr);
