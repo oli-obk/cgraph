@@ -17,7 +17,8 @@ impl Clone for AgsymPtr {
     fn clone(&self) -> Self { AgsymPtr(self.0) }
 }
 
-#[link(name = "cgraph")]
+#[link(name = "cgraph", kind = "static")]
+#[link(name = "gvc", kind = "static")]
 extern {
     // Agraph_t *agmemread(char*);
     fn agmemread(text: *const c_char) -> AgraphPtr;
