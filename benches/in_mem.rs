@@ -13,8 +13,15 @@ digraph testgraph {
     D [label="foo"]
     B -> D [label="bar"]
 }
-"### as &[u8]).to_owned();
-        let s = String::from_utf8(cgraph::Graph::parse(mir_graphviz).unwrap().render_dot().unwrap()).unwrap();
+"### as &[u8])
+            .to_owned();
+        let s = String::from_utf8(
+            cgraph::Graph::parse(mir_graphviz)
+                .unwrap()
+                .render_dot()
+                .unwrap(),
+        )
+        .unwrap();
         test::black_box(s);
     });
 }

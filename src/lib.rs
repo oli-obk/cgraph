@@ -1,6 +1,6 @@
-use std::os::raw::{c_int, c_char, c_void};
+use std::ffi::{CStr, CString};
+use std::os::raw::{c_char, c_int, c_void};
 use std::path::Path;
-use std::ffi::{CString, CStr};
 
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -14,12 +14,14 @@ struct AgraphPtr(*const c_void);
 struct AgsymPtr(*const c_void);
 
 impl Clone for AgsymPtr {
-    fn clone(&self) -> Self { AgsymPtr(self.0) }
+    fn clone(&self) -> Self {
+        AgsymPtr(self.0)
+    }
 }
 
 #[link(name = "cgraph", kind = "static")]
 #[link(name = "gvc", kind = "static")]
-extern {
+extern "C" {
     // Agraph_t *agmemread(char*);
     fn agmemread(text: *const c_char) -> AgraphPtr;
     // int agclose(Agraph_t *g);
@@ -85,12 +87,7 @@ impl Graph {
             }
             let svg = CString::new("svg").unwrap();
             let file_path = file.as_os_str().to_str().unwrap();
-            let res = gvRenderFilename(
-                gvc,
-                self.0,
-                svg.as_ptr(),
-                file_path.as_ptr() as *const i8,
-            );
+            let res = gvRenderFilename(gvc, self.0, svg.as_ptr(), file_path.as_ptr() as *const i8);
             if res != 0 {
                 return Err(GvRenderFilename(res));
             }
@@ -120,13 +117,7 @@ impl Graph {
             let svg = CString::new("svg").unwrap();
             let mut ptr: *const c_char = std::ptr::null();
             let mut len: c_int = 0;
-            let res = gvRenderData(
-                gvc,
-                self.0,
-                svg.as_ptr(),
-                &mut ptr,
-                &mut len,
-            );
+            let res = gvRenderData(gvc, self.0, svg.as_ptr(), &mut ptr, &mut len);
             if res != 0 {
                 return Err(GvRenderFilename(res));
             }
@@ -146,15 +137,11 @@ impl Graph {
 }
 
 #[link(name = "gvc")]
-extern {
+extern "C" {
     // extern GVC_t *gvContext(void);
     fn gvContext() -> GVCPtr;
     // extern int gvLayout(GVC_t *gvc, graph_t *g, char *engine);
-    fn gvLayout(
-        gvc: GVCPtr,
-        g: AgraphPtr,
-        engine: *const c_char,
-    ) -> c_int;
+    fn gvLayout(gvc: GVCPtr, g: AgraphPtr, engine: *const c_char) -> c_int;
     // extern int gvRenderFilename(GVC_t *gvc, graph_t *g, char *format, char *filename);
     fn gvRenderFilename(
         gvc: GVCPtr,
@@ -171,16 +158,9 @@ extern {
         length: *mut c_int,
     ) -> c_int;
     // extern int gvFreeLayout(GVC_t *gvc, graph_t *g);
-    fn gvFreeLayout(
-        gvc: GVCPtr,
-        g: AgraphPtr,
-    ) -> c_int;
+    fn gvFreeLayout(gvc: GVCPtr, g: AgraphPtr) -> c_int;
     // extern int gvFreeContext(GVC_t *gvc);
-    fn gvFreeContext(
-        gvc: GVCPtr,
-    ) -> c_int;
+    fn gvFreeContext(gvc: GVCPtr) -> c_int;
     // gvFreeRenderData
-    fn gvFreeRenderData(
-        data: *const c_char,
-    ) -> c_void;
+    fn gvFreeRenderData(data: *const c_char) -> c_void;
 }
