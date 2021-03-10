@@ -1,5 +1,5 @@
 [package]
 name = "cgraph"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Oliver Schneider <rust-cgraphOochah0O@oli-obk.de>"]
 build = "build.rs"
