@@ -19,8 +19,8 @@ impl Clone for AgsymPtr {
     }
 }
 
-#[link(name = "cgraph", kind = "static")]
-#[link(name = "gvc", kind = "static")]
+#[link(name = "cgraph")]
+#[link(name = "gvc")]
 extern "C" {
     // Agraph_t *agmemread(char*);
     fn agmemread(text: *const c_char) -> AgraphPtr;
