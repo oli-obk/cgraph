@@ -25,7 +25,7 @@ fn main() {
             .probe("libcgraph")
             .unwrap();
         pkg_config::Config::new()
-            .atleast_version("2.0")
+            .atleast_version("0.29")
             .probe("libgvc")
             .unwrap();
     }
